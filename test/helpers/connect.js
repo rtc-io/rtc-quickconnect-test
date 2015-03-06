@@ -1,5 +1,5 @@
 var defaults = require('cog/defaults');
-var detect = require('rtc-tools/detect');
+var detect = require('rtc-core/detect');
 
 module.exports = function(quickconnect, createSignaller, signallerOpts) {
   return function(test, prefix, opts) {
