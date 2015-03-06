@@ -19,5 +19,22 @@
   "bugs": {
     "url": "https://github.com/rtc-io/rtc-quickconnect-test/issues"
   },
-  "homepage": "https://github.com/rtc-io/rtc-quickconnect-test"
+  "homepage": "https://github.com/rtc-io/rtc-quickconnect-test",
+  "testling": {
+    "files": "test-latest.js",
+    "server": "server.js"
+  },
+  "dependencies": {
+    "cog": "^1.0.0",
+    "rtc-core": "^4.0.0",
+    "tape": "^3.5.0",
+    "uuid": "^2.0.1",
+    "whisk": "^1.1.0"
+  },
+  "devDependencies": {
+    "rtc-pluggable-signaller": "^1.1.0",
+    "rtc-quickconnect": "^4.2.0",
+    "rtc-switchboard": "^2.2.1",
+    "testling": "^1.7.1"
+  }
 }
