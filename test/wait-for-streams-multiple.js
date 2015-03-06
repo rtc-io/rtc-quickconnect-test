@@ -65,7 +65,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     connections[0].addStream(ac.createMediaStreamDestination().stream);
     connections[0].addStream(ac.createMediaStreamDestination().stream);
 
-    timer = setTimeout(t.fail.bind(t, 'call:started not triggered'), 3000);
+    timer = setTimeout(t.fail.bind(t, 'call:started not triggered'), 10000);
   });
 
   test('cleanup', function(t) {
