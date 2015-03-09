@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "testling -x ./.travis/start-$BROWSER.sh",
+    "test": "browserify test-latest.js | broth ./.travis/start-$BROWSER.sh | tap-spec",
     "gendocs": "gendocs > README.md"
   },
   "repository": {
@@ -33,9 +33,11 @@
     "whisk": "^1.1.0"
   },
   "devDependencies": {
+    "broth": "^1.1.0",
+    "browserify": "^9.0.3",
     "rtc-pluggable-signaller": "^1.1.0",
     "rtc-quickconnect": "^4.2.0",
     "rtc-switchboard": "^2.2.1",
-    "testling": "^1.7.1"
+    "tap-spec": "^2.2.2"
   }
 }
