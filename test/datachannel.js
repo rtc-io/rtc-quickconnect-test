@@ -2,6 +2,7 @@ var test = require('tape');
 var connections = [];
 var dcs = [];
 var room = require('uuid').v4();
+var remoteIds = [];
 
 // require('cog/logger').enable('*');
 
@@ -32,11 +33,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
     setTimeout(t.pass.bind(t, 'dc created'), 500);
   });
 
+  require('./helpers/remote-ids')(connections, remoteIds);
+
   test('check call active', function(t) {
     t.plan(connections.length * 3);
 
     connections.forEach(function(conn, index) {
-      conn.waitForCall(connections[index ^ 1].id, function(err, pc) {
+      conn.waitForCall(remoteIds[index ^ 1], function(err, pc) {
         t.ifError(err, 'call available');
         t.ok(pc, 'have peer connection');
 
@@ -48,13 +51,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('data channels opened', function(t) {
     t.plan(4);
-    connections[0].requestChannel(connections[1].id, 'test', function(err, dc) {
+    connections[0].requestChannel(remoteIds[1], 'test', function(err, dc) {
       t.ifError(err);
       dcs[0] = dc;
       t.equal(dc.readyState, 'open', 'connection test dc 0 open');
     });
 
-    connections[1].requestChannel(connections[0].id, 'test', function(err, dc) {
+    connections[1].requestChannel(remoteIds[0], 'test', function(err, dc) {
       t.ifError(err);
       dcs[1] = dc;
       t.equal(dc.readyState, 'open', 'connection test dc 1 open');
