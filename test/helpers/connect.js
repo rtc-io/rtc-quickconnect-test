@@ -1,11 +1,10 @@
 var defaults = require('cog/defaults');
 var detect = require('rtc-core/detect');
 
-module.exports = function(quickconnect, createSignaller, signallerOpts) {
+module.exports = function(quickconnect, createSignaller, signallerOpts, remoteIds) {
   return function(test, prefix, opts) {
     var connections = [];
     var roomId = require('uuid').v4();
-    var remoteIds = [];
 
     // make the prefix sensible
     prefix = prefix ? (prefix + ': ') : '';

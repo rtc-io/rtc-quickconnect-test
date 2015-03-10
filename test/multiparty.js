@@ -6,34 +6,21 @@ var roomId = uuid.v4();
 var connectionCount = 3;
 var times = require('whisk/times');
 var pluck = require('whisk/pluck');
+var createMatrix = require('./helpers/connection-matrix')(3, connections);
 
 module.exports = function(quickconnect, createSignaller, opts) {
-  test('create ' + connectionCount + ' connections', function(t) {
-    connections = times(connectionCount).map(function() {
-      var qc = quickconnect(createSignaller(opts), {
-        room: roomId,
-        iceServers: require('./helpers/stun-google')
-      });
-
-      // create a single data channel
-      qc.createDataChannel('test');
-      return qc;
-    });
-
-    t.plan(connections.length);
-    connections.forEach(function(conn) {
-      conn.once('connected', t.pass.bind(t, 'connected ' + conn.id));
-    });
+  var remoteIds = createMatrix(test, quickconnect, createSignaller, opts, {
+    room: roomId,
+    iceServers:  require('./helpers/stun-google')
   });
-
 
   test('establish connection matrix', function(t) {
     t.plan(connections.length * (connections.length - 1));
     console.log('waiting for ' + (connections.length * (connections.length - 1)) + ' connections');
 
-    connections.forEach(function(conn) {
-      var expected = connections.map(pluck('id')).filter(function(id) {
-        return id !== conn.id;
+    connections.forEach(function(conn, idx) {
+      var expected = remoteIds.filter(function(id, idIdx) {
+        return idIdx !== idx;
       });
 
       function callStart(id) {

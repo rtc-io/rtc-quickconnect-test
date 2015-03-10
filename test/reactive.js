@@ -4,6 +4,8 @@ var roomId = require('uuid').v4();
 var dcs = [];
 
 module.exports = function(quickconnect, createSignaller, opts) {
+  var remoteIds = [];
+
   test('quickconnect:0', function(t) {
     t.plan(1);
     connections[0] = quickconnect(createSignaller(opts), { room: roomId });
@@ -18,14 +20,16 @@ module.exports = function(quickconnect, createSignaller, opts) {
     connections[1].once('connected', t.pass.bind(t, 'connected'));
   });
 
+  require('./helpers/remote-ids')(test, connections, remoteIds);
+
   test('call started', function(t) {
     t.plan(2);
     connections[0].once('call:started', function(id) {
-      t.equal(id, connections[1].id, 'connection:0 established call with connection:1');
+      t.equal(id, remoteIds[1], 'connection:0 established call with connection:1');
     });
 
     connections[1].once('call:started', function(id) {
-      t.equal(id, connections[0].id, 'connection:1 established call with connection:0');
+      t.equal(id, remoteIds[0], 'connection:1 established call with connection:0');
     });
   });
 

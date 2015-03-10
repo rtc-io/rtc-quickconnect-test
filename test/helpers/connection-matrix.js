@@ -24,7 +24,6 @@ module.exports = function(connectionCount, connections) {
     }
 
     test('create connection:0', function(t) {
-      console.info(opts);
       t.plan(1);
       t.ok(connections[0] = quickconnect(createSignaller(signallerOpts), opts), 'created');
     });

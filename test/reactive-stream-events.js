@@ -4,13 +4,14 @@ var ac = require('./helpers/audiocontext');
 var localStream;
 
 module.exports = function(quickconnect, createSignaller, opts) {
-  var connect = require('./helpers/connect-reactive')(quickconnect, createSignaller, opts);
+  var remoteIds = [];
+  var connect = require('./helpers/connect-reactive')(quickconnect, createSignaller, opts, remoteIds);
   var connections = connect(test, '(reactive) stream:added tests');
 
   test('broadcast stream from 0 --> 1', function(t) {
     t.plan(3);
     connections[1].once('stream:added', function(id, stream, data) {
-      t.equal(id, connections[0].id, 'id matched expected');
+      t.equal(id, remoteIds[0], 'id matched expected');
       t.ok(stream instanceof MediaStream, 'got stream');
       t.ok(data, 'got data');
     });
@@ -21,7 +22,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   test('connection:0 removeStream', function(t) {
     t.plan(2);
     connections[1].once('stream:removed', function(id, stream) {
-      t.equal(id, connections[0].id, 'id matched expected');
+      t.equal(id, remoteIds[0], 'id matched expected');
       t.ok(stream instanceof MediaStream, 'got stream');
     });
 
@@ -31,7 +32,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   test('broadcast stream from 1 --> 0', function(t) {
     t.plan(3);
     connections[0].once('stream:added', function(id, stream, data) {
-      t.equal(id, connections[1].id, 'id matched expected');
+      t.equal(id, remoteIds[1], 'id matched expected');
       t.ok(stream instanceof MediaStream, 'got stream');
       t.ok(data, 'got data');
     });
@@ -43,7 +44,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     t.plan(2);
 
     connections[0].once('stream:removed', function(id, stream) {
-      t.equal(id, connections[1].id, 'id matched expected');
+      t.equal(id, remoteIds[1], 'id matched expected');
       t.ok(stream instanceof MediaStream, 'got stream');
     });
 

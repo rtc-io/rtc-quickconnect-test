@@ -4,6 +4,8 @@ var dcs = [];
 var room = require('uuid').v4();
 
 module.exports = function(quickconnect, createSignaller, opts) {
+  var remoteIds = [];
+
   test('create connector 0', function(t) {
     t.plan(3);
     t.ok(connections[0] = quickconnect(createSignaller(opts), {
@@ -30,11 +32,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
     setTimeout(t.pass.bind(t, 'dc created'), 500);
   });
 
+  require('./helpers/remote-ids')(test, connections, remoteIds);
+
   test('check call active', function(t) {
     t.plan(connections.length * 3);
 
     connections.forEach(function(conn, index) {
-      conn.waitForCall(connections[index ^ 1].id, function(err, pc) {
+      conn.waitForCall(remoteIds[index ^ 1], function(err, pc) {
         t.ifError(err, 'call available');
         t.ok(pc, 'have peer connection');
 
@@ -46,13 +50,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('data channels opened', function(t) {
     t.plan(4);
-    connections[0].requestChannel(connections[1].id, 'test', function(err, dc) {
+    connections[0].requestChannel(remoteIds[1], 'test', function(err, dc) {
       t.ifError(err);
       dcs[0] = dc;
       t.equal(dc.readyState, 'open', 'connection test dc 0 open');
     });
 
-    connections[1].requestChannel(connections[0].id, 'test', function(err, dc) {
+    connections[1].requestChannel(remoteIds[0], 'test', function(err, dc) {
       t.ifError(err);
       dcs[1] = dc;
       t.equal(dc.readyState, 'open', 'connection test dc 1 open');
@@ -121,7 +125,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     });
 
     connections[1].once('peer:update', function(data) {
-      t.equal(data.id, connections[0].id, 'connection:1 receiver peer:update for connection:0');
+      t.equal(data.id, remoteIds[0], 'connection:1 receiver peer:update for connection:0');
       t.equal(data.room, room, 'room is as expected');
     });
 
@@ -133,7 +137,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     t.plan(connections.length * 3);
 
     connections.forEach(function(conn, index) {
-      conn.waitForCall(connections[index ^ 1].id, function(err, pc) {
+      conn.waitForCall(remoteIds[index ^ 1], function(err, pc) {
         t.ifError(err, 'call available');
         t.ok(pc, 'have peer connection');
 
