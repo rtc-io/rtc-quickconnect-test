@@ -33,7 +33,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     setTimeout(t.pass.bind(t, 'dc created'), 500);
   });
 
-  require('./helpers/remote-ids')(connections, remoteIds);
+  require('./helpers/remote-ids')(test, connections, remoteIds);
 
   test('check call active', function(t) {
     t.plan(connections.length * 3);
