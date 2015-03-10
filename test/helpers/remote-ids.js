@@ -1,6 +1,4 @@
-var test = require('tape');
-
-module.exports = function(connections, remoteIds) {
+module.exports = function(test, connections, remoteIds) {
   test('get connection remote ids', function(t) {
     t.plan(2);
 
