@@ -4,6 +4,7 @@ module.exports = function(quickconnect, createSignaller, signallerOpts) {
   return function(test, prefix, opts) {
     var connections = [];
     var roomId = require('uuid').v4();
+    var remoteIds = [];
 
     // make the prefix sensible
     prefix = prefix ? (prefix + ': ') : '';
@@ -56,12 +57,14 @@ module.exports = function(quickconnect, createSignaller, signallerOpts) {
       });
     }
 
+    require('./remote-ids')(test, connections, remoteIds);
+
     test(prefix + 'calls started', function(t) {
       t.plan(connections.length * 2);
 
       connections.forEach(function(conn, index) {
         conn.once('call:started', function(id, pc) {
-          t.equal(id, connections[index ^ 1].id, 'id matched expected');
+          t.equal(id, remoteIds[index ^ 1], 'id matched expected');
           t.ok(pc, 'got peer connection');
         });
       });
