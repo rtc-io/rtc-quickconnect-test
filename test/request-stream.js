@@ -39,4 +39,12 @@ module.exports = function(quickconnect, createSignaller, opts) {
       t.ok(stream instanceof MediaStream, 'got stream');
     });
   });
+
+  test('cleanup', function(t) {
+    t.plan(connections.length);
+    connections.splice(0).forEach(function(conn) {
+      conn.once('disconnected', t.pass.bind(t, 'disconnected'));
+      conn.close();
+    });
+  });
 };
