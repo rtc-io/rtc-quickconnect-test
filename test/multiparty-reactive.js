@@ -5,35 +5,21 @@ var times = require('whisk/times');
 var pluck = require('whisk/pluck');
 var dcs = [];
 var testStream = new AudioContext().createMediaStreamDestination().stream;
-var connectionCount = 3;
+var createMatrix = require('./helpers/connection-matrix')(3, connections);
 
 module.exports = function(quickconnect, createSignaller, opts) {
-  test('create ' + connectionCount + ' connections', function(t) {
-    connections = times(connectionCount).map(function() {
-      var qc = quickconnect(createSignaller(opts), {
-        room: roomId,
-        reactive: true,
-        iceServers: require('./helpers/stun-google')
-      });
-
-      // create a single data channel
-      qc.createDataChannel('test');
-      return qc;
-    });
-
-    t.plan(connections.length);
-    connections.forEach(function(conn) {
-      conn.once('connected', t.pass.bind(t, 'connected'));
-    });
+  var remoteIds = createMatrix(test, quickconnect, createSignaller, opts, {
+    room: roomId,
+    reactive: true,
+    iceServers:  require('./helpers/stun-google')
   });
 
-
-  test('establish connection matrix', function(t) {
+  test('establish connectivity', function(t) {
     t.plan(connections.length * (connections.length - 1));
 
-    connections.forEach(function(conn) {
-      var expected = connections.map(pluck('id')).filter(function(id) {
-        return id !== conn.id;
+    connections.forEach(function(conn, idx) {
+      var expected = remoteIds.filter(function(id, idIdx) {
+        return idIdx !== idx;
       });
 
       function callStart(id) {
@@ -55,9 +41,9 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('add another data channel (t2) on each of the connections', function(t) {
     t.plan(connections.length * (connections.length - 1));
-    connections.forEach(function(conn) {
-      var expected = connections.map(pluck('id')).filter(function(id) {
-        return id !== conn.id;
+    connections.forEach(function(conn, idx) {
+      var expected = remoteIds.filter(function(id, idIdx) {
+        return idIdx !== idx;
       });
 
       function handleChannelOpen(id) {
@@ -80,9 +66,9 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('add another two data channels (t3,t4) and a stream on each of the connections', function(t) {
     t.plan(connections.length * (connections.length - 1) * 3);
-    connections.forEach(function(conn) {
-      var expected = connections.map(pluck('id')).filter(function(id) {
-        return id !== conn.id;
+    connections.forEach(function(conn, idx) {
+      var expected = remoteIds.filter(function(id, idIdx) {
+        return idIdx !== idx;
       });
 
       function checkDone() {
