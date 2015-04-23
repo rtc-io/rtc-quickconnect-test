@@ -1,3 +1,4 @@
+var extend = require('cog/extend');
 var times = require('whisk/times');
 
 module.exports = function(connectionCount, connections) {
@@ -19,18 +20,24 @@ module.exports = function(connectionCount, connections) {
           });
         });
 
-        t.ok(connections[index] = quickconnect(createSignaller(signallerOpts), opts), 'created');
+        t.ok(initQC(index), 'created');
       };
+    }
+
+    function initQC(index) {
+      var qc = connections[index] = quickconnect(createSignaller(signallerOpts), opts);
+      qc.createDataChannel('tmp');
+      return qc;
     }
 
     test('create connection:0', function(t) {
       t.plan(1);
-      t.ok(connections[0] = quickconnect(createSignaller(signallerOpts), opts), 'created');
+      t.ok(initQC(0), 'created');
     });
 
     test('create connection:1', function(t) {
       t.plan(1);
-      t.ok(connections[1] = quickconnect(createSignaller(signallerOpts), opts), 'created');
+      t.ok(initQC(1), 'created');
     });
 
     test('register remote ids for connections 0 and 1', function(t) {
