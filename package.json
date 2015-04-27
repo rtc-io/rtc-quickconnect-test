@@ -33,11 +33,12 @@
     "whisk": "^1.1.0"
   },
   "devDependencies": {
-    "broth": "^1.1.0",
+    "broth": "^2.0.0",
     "browserify": "^9.0.3",
     "rtc-pluggable-signaller": "^1.1.0",
     "rtc-quickconnect": "^4.2.0",
     "rtc-switchboard": "^2.2.1",
-    "tap-spec": "^2.2.2"
+    "tap-spec": "^3.0.0",
+    "tape": "^4.0.0"
   }
 }
