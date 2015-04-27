@@ -39,6 +39,7 @@
     "rtc-quickconnect": "^4.2.0",
     "rtc-switchboard": "^2.2.1",
     "tap-spec": "^3.0.0",
-    "tape": "^4.0.0"
+    "tape": "^4.0.0",
+    "travis-multirunner": "^2.1.0"
   }
 }
