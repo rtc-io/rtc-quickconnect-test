@@ -59,7 +59,6 @@ module.exports = function(quickconnect, createSignaller, opts) {
   test('client:2 updates profile', function(t) {
     t.plan(4);
 
-    clients[2].profile({ age: 57 });
     clients[0].once('peer:update', function(data) {
       t.equal(data.name, 'Fred', 'client:0 got peer:update (name === Fred)');
       t.equal(data.age, 57, 'client:0 got peer:update (age === 57)');
@@ -69,6 +68,8 @@ module.exports = function(quickconnect, createSignaller, opts) {
       t.equal(data.name, 'Fred', 'client:1 got peer:update (name === Fred)');
       t.equal(data.age, 57, 'client:1 got peer:update (age === 57)');
     });
+
+    clients[2].profile({ age: 57 });
   });
 
   test('release references', function(t) {
@@ -80,4 +81,3 @@ module.exports = function(quickconnect, createSignaller, opts) {
     t.pass('done');
   });
 };
-
