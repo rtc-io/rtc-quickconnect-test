@@ -14,7 +14,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
       {
         id: 'scheme1',
         isDefault: true,
-        config: {
+        connection: {
           iceServers: stunGoogle
         }
       }
@@ -48,7 +48,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     t.plan(1);
     var scheme = {
       id: 'backup',
-      config: {
+      connection: {
         ice: function(opts, callback) {
           return callback(null, stunGoogle.slice(1));
         }
