@@ -7,6 +7,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   require('./bus-events')(quickconnect, createSignaller, opts);
   require('./wait-for-streams-single')(quickconnect, createSignaller, opts);
   require('./multiparty')(quickconnect, createSignaller, opts);
+  require('./schemes')(quickconnect, createSignaller, opts);
 
   if (! detect.moz) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=852665
