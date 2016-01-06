@@ -26,20 +26,31 @@ module.exports = function(quickconnect, createSignaller, opts) {
     t.plan(1);
     for (var i = 0; i < 2; i++) {
       var qc = quickconnect(createSignaller(opts), connOpts);
+      // NOTE: Originally this test ran without creating a data channel, but it would fail
+      // on Firefox as when no media is specified, the first connection would generate
+      // candidates, but the second, upon generating the answer and setting the local description,
+      // would observe that there are no media streams, and fail the connection (as Firefox does
+      // not seem to handle the a=inactive option at the moment)
+      // Adding a media stream restores everything to working
+      qc.createDataChannel('data');
       connections.push(qc);
     }
     t.equals(connections.length, 2, 'connections created');
   });
 
   test('test connection using a default scheme', function(t) {
-    t.plan(connections.length * 3);
+    t.plan(connections.length * 5);
 
     connections.forEach(function(conn, idx) {
+      var label = 'conn' + idx + ' [' + conn.id + ']';
       conn.once('peer:iceservers', function(id, schemeId, iceServers) {
         t.equals(schemeId, 'scheme1', 'scheme1 is used by default');
-        t.deepEqual(stunGoogle, iceServers, 'scheme1 returns google stun servers');
+        t.deepEqual(stunGoogle, iceServers, 'scheme1 returns google stun servers for ' + label);
       });
+      conn.once('peer:couple', t.pass.bind(t.pass, 'coupling started for ' + label));
+      conn.once('call:created', t.pass.bind(t.pass, 'call has been created for ' + label));
       conn.once('call:started', t.pass.bind(t, 'Call started'));
+      conn.once('call:failed', t.fail.bind(t.fail, 'call failed'));
       conn.join();
     });
   });
@@ -75,6 +86,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     connections.forEach(function(conn) {
       conn.once('peer:iceservers', checkIceServers);
       conn.once('call:started', t.pass.bind(t, 'Call reconnected'));
+      conn.once('call:failed', t.fail.bind(t.fail, 'call failed'));
     });
 
     source.reconnectTo(target.id, { scheme: 'backup' });
