@@ -1,8 +1,9 @@
 var test = require('tape');
-var roomId = require('uuid').v4();
-var clients = [];
 
 module.exports = function(quickconnect, createSignaller, opts) {
+  var roomId = require('uuid').v4();
+  var clients = [];
+
   test('create test participant', function(t) {
     t.plan(3);
 
@@ -59,14 +60,18 @@ module.exports = function(quickconnect, createSignaller, opts) {
   test('client:2 updates profile', function(t) {
     t.plan(4);
 
-    clients[0].once('peer:update', function(data) {
+    clients[0].on('peer:update', function waitClient0(data) {
+      if (data.id !== clients[2].id) return console.info('Update to client:0, not from client:2, waiting for other peer', data);
       t.equal(data.name, 'Fred', 'client:0 got peer:update (name === Fred)');
       t.equal(data.age, 57, 'client:0 got peer:update (age === 57)');
+      clients[0].off('peer:update', waitClient0);
     });
 
-    clients[1].once('peer:update', function(data) {
+    clients[1].on('peer:update', function waitClient1(data) {
+      if (data.id !== clients[2].id) return console.info('Update to client:1, not from client:2, waiting for other peer', data);
       t.equal(data.name, 'Fred', 'client:1 got peer:update (name === Fred)');
       t.equal(data.age, 57, 'client:1 got peer:update (age === 57)');
+      clients[1].off('peer:update', waitClient1);
     });
 
     clients[2].profile({ age: 57 });
