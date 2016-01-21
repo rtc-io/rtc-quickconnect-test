@@ -8,11 +8,11 @@ module.exports = function(quickconnect, createSignaller, opts) {
   require('./wait-for-streams-single')(quickconnect, createSignaller, opts);
   require('./multiparty')(quickconnect, createSignaller, opts);
   require('./schemes')(quickconnect, createSignaller, opts);
-  require('./unexpected-disconnect')(quickconnect, createSignaller, opts);
 
   if (! detect.moz) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=852665
     require('./reconnect')(quickconnect, createSignaller, opts);
+    require('./unexpected-disconnect')(quickconnect, createSignaller, opts);
 
     // https://bugzilla.mozilla.org/show_bug.cgi?id=857115
     require('./reactive')(quickconnect, createSignaller, opts);
