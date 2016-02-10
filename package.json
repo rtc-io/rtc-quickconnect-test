@@ -35,7 +35,6 @@
   "devDependencies": {
     "broth": "^2.0.0",
     "browserify": "^9.0.3",
-    "bufferutil": "^1.2.1",
     "rtc-pluggable-signaller": "^1.1.0",
     "rtc-quickconnect": "git://github.com/rtc-io/rtc-quickconnect.git#master",
     "rtc-switchboard": "^3.0.0",
