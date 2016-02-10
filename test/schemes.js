@@ -1,11 +1,11 @@
 var test = require('tape');
 var uuid = require('uuid');
-var connections = [];
-var dcs = [];
-var roomId = uuid.v4();
 var extend = require('cog/extend');
 
 module.exports = function(quickconnect, createSignaller, opts) {
+  var connections = [];
+  var dcs = [];
+  var roomId = uuid.v4();
   var stunGoogle = require('./helpers/stun-google');
   var connOpts = {
     manualJoin: true,
@@ -79,7 +79,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     var target = connections[1];
 
     function checkIceServers(id, schemeId, servers) {
-      t.equals(schemeId, 'backup', 'using the backup scheme');
+      t.equals(schemeId, 'backup', 'using the backup scheme (' + schemeId + ')');
       t.deepEqual(servers, stunGoogle.slice(1), 'backup scheme returns abridged server list');
     }
 
