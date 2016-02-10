@@ -6,6 +6,8 @@ node_js:
 - stable
 
 env:
+  global:
+    - CXX=g++-4.8
   matrix:
     - BROWSER=chrome  BVER=stable
     - BROWSER=chrome  BVER=beta
@@ -32,3 +34,10 @@ after_failure:
 notifications:
   email:
   - nathan.oehlman@nicta.com.au
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
