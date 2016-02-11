@@ -60,7 +60,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   });
 
   test('register a new scheme', function(t) {
-    t.plan(1);
+    t.plan(3);
     var scheme = {
       id: 'backup',
       connection: {
@@ -72,6 +72,8 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
     connections.forEach(function(conn) {
       conn.registerScheme(scheme);
+      var added = conn.getScheme('backup');
+      t.equals(added.id, 'backup', 'backup scheme was added successfully');
     });
 
     t.pass('New scheme registered');
@@ -88,6 +90,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
     }
 
     connections.forEach(function(conn) {
+
       conn.once('peer:reconnecting', function(id, data) {
         t.equals(data.scheme, 'backup', 'reconnecting with backup scheme');
       });
@@ -96,8 +99,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
         t.equals(scheme.id, 'backup', 'correctly detected backup scheme');
       });
       conn.once('peer:iceservers', checkIceServers);
-      conn.once('call:started', t.pass.bind(t, 'Call reconnected'));
-      conn.once('call:failed', t.fail.bind(t.fail, 'call failed'));
+      conn.once('call:started', function() {
+        t.pass('Call reconnected');
+      });
+
+      conn.once('call:failed', function() {
+        t.fail('call failed');
+      });
     });
 
     source.reconnectTo(target.id, { scheme: 'backup' });
