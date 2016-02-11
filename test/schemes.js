@@ -43,6 +43,10 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
     connections.forEach(function(conn, idx) {
       var label = 'conn' + idx + ' [' + conn.id + ']';
+      conn.once('peer:prepare', function(id, data, scheme) {
+        t.ok(scheme, 'scheme detected prior to connection initialization');
+        t.equals(scheme.id, 'scheme1', 'correctly detected scheme1 scheme');
+      });
       conn.once('peer:iceservers', function(id, schemeId, iceServers) {
         t.equals(schemeId, 'scheme1', 'scheme1 is used by default');
         t.deepEqual(stunGoogle, iceServers, 'scheme1 returns google stun servers for ' + label);
@@ -84,6 +88,13 @@ module.exports = function(quickconnect, createSignaller, opts) {
     }
 
     connections.forEach(function(conn) {
+      conn.once('peer:reconnecting', function(id, data) {
+        t.equals(data.scheme, 'backup', 'reconnecting with backup scheme');
+      });
+      conn.once('peer:prepare', function(id, data, scheme) {
+        t.ok(scheme, 'scheme detected prior to connection initialization');
+        t.equals(scheme.id, 'backup', 'correctly detected backup scheme');
+      });
       conn.once('peer:iceservers', checkIceServers);
       conn.once('call:started', t.pass.bind(t, 'Call reconnected'));
       conn.once('call:failed', t.fail.bind(t.fail, 'call failed'));
