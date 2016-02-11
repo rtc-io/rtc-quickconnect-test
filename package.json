@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "browserify test-latest.js | broth ./node_modules/travis-multirunner/start-$BROWSER.sh | tap-spec",
+    "test": "browserify test-latest.js | broth ./node_modules/travis-multirunner/start.sh | tap-spec",
     "gendocs": "gendocs > README.md"
   },
   "repository": {
@@ -33,10 +33,12 @@
     "whisk": "^1.1.0"
   },
   "devDependencies": {
+    "bindings": "^1.2.1",
     "broth": "^2.0.0",
     "browserify": "^9.0.3",
+    "bufferutil": "^1.2.1",
     "rtc-pluggable-signaller": "^1.1.0",
-    "rtc-quickconnect": "^5.0.0",
+    "rtc-quickconnect": "git://github.com/rtc-io/rtc-quickconnect.git#master",
     "rtc-switchboard": "^3.0.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0",
