@@ -39,7 +39,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   });
 
   test('test connection using a default scheme', function(t) {
-    t.plan(connections.length * 5);
+    t.plan(connections.length * 7);
 
     connections.forEach(function(conn, idx) {
       var label = 'conn' + idx + ' [' + conn.id + ']';
@@ -78,7 +78,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
   });
 
   test('test reconnection with a given scheme', function(t) {
-    t.plan(6);
+    t.plan(12);
     var source = connections[0];
     var target = connections[1];
 
