@@ -85,23 +85,29 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('end calls on connection 0 and wait for dc close notifications', function(t) {
     var timer = setTimeout(t.fail.bind(t, 'timed out'), 45000);
-    var closedCount = 0;
+    var assertions = 0;
+
+    function assertionPassed() {
+      assertions += 1;
+      if (assertions === connections.length * 3) {
+        t.pass('All expected event assertions passed');
+        clearTimeout(timer);
+      }
+    }
 
     function handleClose(peerId, datachannel, label) {
       t.equal(label, 'test', 'label == test');
       t.ok(datachannel.readyState, '2nd arg is a data channel');
       t.equal(typeof peerId, 'string', '1st args is a string');
-
-      closedCount += 1;
-      if (closedCount === 4) {
-        clearTimeout(timer);
-      }
+      t.equal(datachannel.readyState, 'closed', 'data channel closed');
+      assertionPassed();
     }
 
-    t.plan(12);
+    t.plan(17);
     connections.forEach(function(conn, idx) {
       conn.once('channel:closed', handleClose);
       conn.once('channel:closed:test', handleClose);
+      conn.once('call:ended', assertionPassed);
     });
 
     connections[0].endCalls();
@@ -135,7 +141,6 @@ module.exports = function(quickconnect, createSignaller, opts) {
 
   test('check call active', function(t) {
     t.plan(connections.length * 3);
-
     connections.forEach(function(conn, index) {
       conn.waitForCall(remoteIds[index ^ 1], function(err, pc) {
         t.ifError(err, 'call available');
