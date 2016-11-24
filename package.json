@@ -1,6 +1,6 @@
 {
   "name": "rtc-quickconnect-test",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "",
   "main": "index.js",
   "scripts": {
