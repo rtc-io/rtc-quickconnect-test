@@ -43,7 +43,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
         t.ok(pc, 'have peer connection');
 
         // check connection state valid
-        t.ok(['connected', 'completed'].indexOf(pc.iceConnectionState) >= 0, 'call connected');
+        t.ok(['connected', 'completed'].indexOf(pc.iceConnectionState) >= 0, 'call connected [' + pc.iceConnectionState + ']');
       });
     });
   });
@@ -142,7 +142,7 @@ module.exports = function(quickconnect, createSignaller, opts) {
         t.ok(pc, 'have peer connection');
 
         // check connection state valid
-        t.ok(['connected', 'completed'].indexOf(pc.iceConnectionState) >= 0, 'call connected');
+        t.ok(['connected', 'completed'].indexOf(pc.iceConnectionState) >= 0, 'call connected [' + pc.iceConnectionState + ']');
       });
     });
   });
