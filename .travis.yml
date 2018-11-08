@@ -1,8 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-- 0.10
-- 4.1
+- 6
+- lts/*
 - stable
 
 env:
@@ -33,7 +33,7 @@ after_failure:
 
 notifications:
   email:
-  - nathan.oehlman@nicta.com.au
+  - nathan+rtcio@coviu.com
 
 addons:
   apt:
